@@ -70,12 +70,18 @@ def load_and_preprocess_data():
     )  # 0.25 * 0.8 = 0.2 of the original data
 
     # Standardize numerical features
-    scaler = StandardScaler()
-    numerical_cols = X.select_dtypes(include=['int64', 'float64']).columns
+    # Chỉ chuẩn hoá các cột liên tục/ordinal phù hợp
+    columns_to_scale = [
+        'Age', 'Academic Pressure', 'CGPA', 'Study Satisfaction',
+        'Sleep Duration', 'Work/Study Hours', 'Financial Stress',
+        'Dietary Habits'
+    ]
 
-    X_train[numerical_cols] = scaler.fit_transform(X_train[numerical_cols])
-    X_val[numerical_cols] = scaler.transform(X_val[numerical_cols])
-    X_test[numerical_cols] = scaler.transform(X_test[numerical_cols])
+    scaler = StandardScaler()
+
+    X_train[columns_to_scale] = scaler.fit_transform(X_train[columns_to_scale])
+    X_val[columns_to_scale] = scaler.transform(X_val[columns_to_scale])
+    X_test[columns_to_scale] = scaler.transform(X_test[columns_to_scale])
 
     # Check for any NaN values in the processed data
     nan_count = np.isnan(X_train.values).sum()
